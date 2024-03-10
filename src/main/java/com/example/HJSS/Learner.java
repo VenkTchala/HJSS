@@ -11,7 +11,7 @@ public class Learner {
     private int age;
     private String phoneNumber;
     private String emergencyContact;
-    private int gradeLevel;
+    private GradeLevel gradeLevel;
     private List<Lesson> bookedLessons;
     private List<Lesson> cancelledLessons;
     private List<Lesson> attendedLessons;
@@ -23,11 +23,11 @@ public class Learner {
         this.id = Learner.index;
         Learner.index++;
         this.name = name;
-        this.gender = gender;
+        this.gender =gender;
         this.age = age;
         this.phoneNumber = phoneNumber;
         this.emergencyContact = emergencyContact;
-        this.gradeLevel = 0;
+        this.gradeLevel = GradeLevel.ZERO;
 
     }
 
@@ -59,7 +59,7 @@ public class Learner {
     }
 
 
-    public int getGradeLevel() {
+    public GradeLevel getGradeLevel() {
         return gradeLevel;
     }
 

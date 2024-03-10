@@ -20,7 +20,7 @@ class LessonTest {
         LocalDate date = LocalDate.of(2024,3,10);
         TimeSlot timeSlot = TimeSlot.FIVETOSIXPM;
         Coach coach = new Coach("john doe",Gender.MALE);
-        int gradeLevel = 2;
+        GradeLevel gradeLevel = GradeLevel.TWO;
         Lesson lesson = new Lesson(date,timeSlot,coach,gradeLevel);
 
         assertEquals(date,lesson.getDate());
