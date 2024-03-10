@@ -23,11 +23,59 @@ public class Learner {
         this.id = Learner.index;
         Learner.index++;
         this.name = name;
+        this.gender = gender;
         this.age = age;
         this.phoneNumber = phoneNumber;
         this.emergencyContact = emergencyContact;
         this.gradeLevel = 0;
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+
+    public int getAge() {
+        return age;
+    }
+
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+
+
+    public int getGradeLevel() {
+        return gradeLevel;
+    }
+
+
+    public List<Lesson> getBookedLessons() {
+        return bookedLessons;
+    }
+
+
+    public List<Lesson> getCancelledLessons() {
+        return cancelledLessons;
+    }
+
+
+    public List<Lesson> getAttendedLessons() {
+        return attendedLessons;
     }
 
 }
