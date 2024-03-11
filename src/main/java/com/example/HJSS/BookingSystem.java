@@ -29,15 +29,18 @@ public class BookingSystem {
             learners.add(learner);
         }
         catch (Exception e){
-            System.err.println(e.getMessage());
+            System.err.println("\n" + e.getMessage() + ", please register again." + "\n");
         }
         return true;
     }
 
     public Learner parseLearnerFromInput(InputStream in){
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter Your Name : ");
+        Scanner sc = new Scanner(in);
+
+        System.out.println("\nLearner Registration.");
+
+        System.out.println("\nEnter Your Name : ");
 
         String name = sc.nextLine();
 
@@ -57,7 +60,6 @@ public class BookingSystem {
                 gender = Gender.OTHER;
                 break;
             default:
-                System.out.println("Invalid gender");
                 throw new IllegalArgumentException("IllegalGender");
         }
 
@@ -70,7 +72,6 @@ public class BookingSystem {
             age = Integer.parseInt(ageString);
         }
         catch (Exception e){
-            System.out.println("Invalid age : " + ageString);
             throw new IllegalArgumentException("IllegalGender");
         }
 
