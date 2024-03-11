@@ -4,7 +4,7 @@ package com.example.HJSS;
 import java.util.List;
 
 public class Learner {
-    private static int index = 0;
+    private static int index = 1 ;
     private int id;
     private String name;
     private Gender gender;
@@ -78,4 +78,19 @@ public class Learner {
         return attendedLessons;
     }
 
+    @Override
+    public String toString() {
+        return "Learner{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", emergencyContact='" + emergencyContact + '\'' +
+                ", gradeLevel=" + gradeLevel +
+                ", bookedLessons=" + bookedLessons +
+                ", cancelledLessons=" + cancelledLessons +
+                ", attendedLessons=" + attendedLessons +
+                '}';
+    }
 }

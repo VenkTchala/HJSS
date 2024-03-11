@@ -1,7 +1,11 @@
 package com.example;
 
+import com.example.HJSS.BookingSystem;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        BookingSystem bookingSystem = new BookingSystem();
+
+        bookingSystem.addLearner(System.in);
     }
 }

@@ -11,5 +11,27 @@ public class Coach {
     public Coach(String name, Gender gender) {
         this.name = name;
         this.gender = gender;
+        this.averageRating = 0;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public List<Lesson> getLessonsTaught() {
+        return lessonsTaught;
+    }
+
+    protected void updateRating(double rating){
+        this.averageRating = rating;
+    }
+
 }

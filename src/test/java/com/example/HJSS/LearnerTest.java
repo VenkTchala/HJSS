@@ -25,4 +25,18 @@ class LearnerTest {
 
         assertEquals("A learner’s age needs to be between 4 and 11",exception.getLocalizedMessage());
     }
+
+    @Test
+    void shouldIncrementId(){
+        Learner learner = new Learner("john",Gender.MALE,10,"44444555444","4444554444");
+        int start = learner.getId();
+        for(int i = 1 ; i < 10 ; i++){
+            Learner learner1 = new Learner("john",Gender.MALE,10,"44444555444","4444554444");
+            assertEquals( start + i  ,learner1.getId());
+        }
+
+    }
+
+
+
 }
