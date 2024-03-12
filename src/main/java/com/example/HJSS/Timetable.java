@@ -1,28 +1,42 @@
 package com.example.HJSS;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Timetable {
-    private List<Lesson> lessons;
+    private List<Lesson> lessons = new ArrayList<>();
+
+    private Map<DayOfWeek,List<Lesson>> dayLessonMap = new HashMap<>();
+    private Map<Coach,List<Lesson>> coachLessonMap = new HashMap<>();
+    private Map<GradeLevel, List<Lesson>> gradeLevelListMap = new HashMap<>();
 
     public List<Lesson> getLessonsByDay(DayOfWeek week) {
-        return lessons.stream()
-                .filter(i -> i.getDate().getDayOfWeek().equals(week))
-                .toList();
+        return dayLessonMap.get(week);
     }
 
     public List<Lesson> getLessonsByCoach(Coach coach){
-        return lessons.stream()
-                .filter(i -> i.getCoach().equals(coach))
-                .toList();
+        return coachLessonMap.get(coach);
     }
 
     public List<Lesson> getLessonsByGrade(GradeLevel level){
-        return lessons.stream()
-                .filter(i -> i.getGradeLevel().equals(level))
-                .toList();
+        return gradeLevelListMap.get(level);
     }
 
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
+
+    public void addLesson(Lesson lesson){
+        coachLessonMap.putIfAbsent(lesson.getCoach(),new ArrayList<>());
+        coachLessonMap.get(lesson.getCoach()).add(lesson);
+        dayLessonMap.putIfAbsent(lesson.getDate().getDayOfWeek(), new ArrayList<>());
+        dayLessonMap.get(lesson.getDate().getDayOfWeek()).add(lesson);
+        gradeLevelListMap.putIfAbsent(lesson.getGradeLevel(),new ArrayList<>());
+        gradeLevelListMap.get(lesson.getGradeLevel()).add(lesson);
+        lessons.add(lesson);
+    }
 
 }

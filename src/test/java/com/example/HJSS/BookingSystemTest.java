@@ -22,9 +22,18 @@ public class BookingSystemTest {
         assertNotEquals(0,bookingSystem.getLearnersCount());
     }
 
+    @ParameterizedTest()
+    @ValueSource(strings = {"john\nN\n10\n44488485\n44554564"})
+    void shouldThrowExceptionOnWrongCreds (String input){
 
-//    @ParameterizedTest()
-//    @ValueSource(strings = {""})
-//    void test (String input)
-//
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BookingSystem bookingSystem = new BookingSystem();
+
+        assertThrows(IllegalArgumentException.class ,() -> {
+            bookingSystem.parseLearnerFromInput(System.in);
+        });
+    }
+
+
 }

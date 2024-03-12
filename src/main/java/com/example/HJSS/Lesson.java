@@ -67,7 +67,16 @@ public class Lesson {
         return true;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "id=" + id +
+                ", date=" + date +
+                ", timeSlot=" + timeSlot +
+                ", coach=" + coach +
+                ", gradeLevel=" + gradeLevel +
+                ", bookedLearners=" + bookedLearners +
+                ", hasVacancy=" + hasVacancy +
+                '}';
+    }
 }

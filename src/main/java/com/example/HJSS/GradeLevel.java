@@ -7,5 +7,4 @@ public enum GradeLevel {
     THREE,
     FOUR,
     FIVE
-
 }
