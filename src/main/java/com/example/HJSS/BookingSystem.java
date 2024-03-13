@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class BookingSystem {
     private List<Learner> learners;
@@ -210,13 +211,100 @@ public class BookingSystem {
 
             localDate = firstDayOfNextWeek;
         }
-
     }
 
-    private void printTableMenu(){
+    public void printTableMenu(InputStream in){
+        Scanner sc = new Scanner(in);
 
+        System.out.println( "Press (C) to View lessons taught by Coach\t" + "Press (G) to view lessons by GradeLevel\t\t" + "Press (D) to view Lessons by Day\t");
 
+        String str = sc.nextLine();
+
+        switch (str){
+            case "C", "c" -> printTableByCoach(in);
+            case "G","g" -> printTableByGradeLevel(in);
+            case "D","d"-> printTableByDate(in);
+        }
     }
+
+    private void printTableByGradeLevel(InputStream in){
+
+        IntStream.range(1, GradeLevel.values().length)
+                .forEach(i ->
+                    System.out.println( "Press " + i + " to select lessons at Grade " + GradeLevel.values()[i])
+                );
+
+        Scanner sc = new Scanner(in);
+        String selection = sc.nextLine();
+        int i;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            if(i < 0 || i > GradeLevel.values().length) {
+                System.err.println("Invalid option : " + i);
+                return;
+            }
+            printTable(timetable.getLessonsByGrade(GradeLevel.values()[i]));
+
+        }
+        catch (Exception e){
+            System.err.println("Invalid option : " + selection);
+        }
+    }
+
+    private void printTableByCoach(InputStream in){
+
+        IntStream.range(0, coaches.size())
+                .forEach(i -> {
+                    System.out.println( "Press " + i + " to select lessons taught by " + coaches.get(i).getName());
+                });
+
+        Scanner sc = new Scanner(in);
+        String selection = sc.nextLine();
+        int i;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            if(i < 0 || i > coaches.size()) {
+            System.err.println("Invalid option : " + i);
+            return;
+        }
+            printTable(timetable.getLessonsByCoach(coaches.get(i)));
+
+        }
+        catch (Exception e){
+            System.err.println("Invalid option : " + selection);
+        }
+    }
+
+    private void printTableByDate(InputStream in){
+        Scanner sc = new Scanner(in);
+        for(int i = 0 ; i < OperatingDays.values().length ; i++ ){
+            System.out.println("Press (" + i + ") to select " + OperatingDays.values()[i]);
+        }
+
+        String str = sc.nextLine();
+
+        int i;
+
+        try {
+            i = Integer.parseInt(str);
+
+            if(i < 0 || i > OperatingDays.values().length) {
+                System.err.println("Invalid option : " + i);
+                return;
+            }
+            printTable(timetable.getLessonsByDay( DayOfWeek.valueOf(OperatingDays.values()[i].toString())));
+
+        }
+        catch (Exception e){
+            System.err.println("Invalid option : " + str);
+        }
+    }
+
+
 
     public void addToTimeTable(LocalDate i , Map<OperatingDays,List<String[]>> lessonMap, Map<String,TimeSlot> stringTimeSlotMap, Map<String,GradeLevel> intGradeLevelMap){
         switch (i.getDayOfWeek()){
@@ -236,14 +324,14 @@ public class BookingSystem {
         }
     }
 
-    public void printWholeTimeTable(){
+    public void printTable(List<Lesson> list){
         System.out.println("-".repeat(80));
 
         System.out.format("%-15s%-15s%-15s%-15s%-15s%n", "Date" , "Day", "Coach" , "grade", "remainingSeats" );
 
         System.out.println("-".repeat(80));
 
-        timetable.getLessons()
+        list
                 .forEach(i ->
                         System.out.format("%-15s%-15s%-15s%-15d%-15d%n", i.getDate() ,i.getDate().getDayOfWeek().toString().toLowerCase() , i.getCoach().getName() , i.getGradeLevel().ordinal(), i.getVacancy() )
                         );

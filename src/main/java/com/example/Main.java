@@ -25,7 +25,7 @@ public class Main {
                 case "N" , "n" ->
                 bookingSystem.addLearner(System.in);
                 case "V" , "v" ->
-                    bookingSystem.printWholeTimeTable();
+                    bookingSystem.printTableMenu(System.in);
                 case "E", "e" ->{ break loop;}
             }
 
