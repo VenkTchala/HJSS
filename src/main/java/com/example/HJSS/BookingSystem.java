@@ -25,10 +25,33 @@ public class BookingSystem {
             coachMap.put(names[i],coach);
             coaches.add(coach);
         }
-
         createTimetable();
 
+//        Learner learner =
+        String learnerNames[] = {"John", "Ibrahim", "Victor" , "Paul" , "Aurora", "Ava", "Leon" };
+        String learnerGender[] = {"M", "M", "M" , "M" , "F", "F", "M" };
+        int learnerAges[] = {9,10,11,8,7,6,5};
+        String[] phoneNumbers = {"44648484843", "44866264265" , "44848457654", "44754234141" , "44554414375" , "44334252225" , "44534267854"  };
+
+        String[] emergencyNumbers = {"44768484843", "44156264265" , "44768457654", "44834234141" , "44124414375" , "44524252225" , "44144267854"  };
+        for(int i = 0 ; i < learnerNames.length ; i++){
+            String name = learnerNames[i];
+            Gender gender;
+            int age = learnerAges[i];
+            switch (learnerGender[i]){
+                case "M" -> gender = Gender.MALE;
+                case "F" -> gender = Gender.FEMALE;
+                case "O" -> gender = Gender.OTHER;
+                default -> {
+                    return;
+                }
+            }
+            Learner learner = new Learner(name, gender, age,phoneNumbers[i], emergencyNumbers[i]);
+            learners.add(learner);
+        }
+
     }
+
     public boolean addLearner(InputStream in){
         try {
             Learner learner =
