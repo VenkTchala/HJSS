@@ -8,6 +8,11 @@ public class Lesson {
     private static int index;
     private final int id;
     private final LocalDate date;
+
+    public int getId() {
+        return id;
+    }
+
     private final TimeSlot timeSlot;
     private final Coach coach;
     private final GradeLevel gradeLevel;
@@ -57,8 +62,8 @@ public class Lesson {
         int learnerGradeInt = learnerGrade.ordinal();
         int lessonGradeInt = gradeLevel.ordinal();
 
-        if(learnerGrade.equals(this.gradeLevel) || learnerGradeInt + 1 == lessonGradeInt )
-            throw new IllegalArgumentException("Grade " + learnerGrade + "learners cannot attend grade " + this.gradeLevel + " lesson" );
+        if( learnerGradeInt + 1 != lessonGradeInt && learnerGradeInt != lessonGradeInt )
+            throw new IllegalArgumentException("Grade " + learnerGrade + " learners cannot attend grade " + this.gradeLevel + " lesson" );
         this.bookedLearners.add(learner);
 
         if(this.bookedLearners.size() == 4)

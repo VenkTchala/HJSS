@@ -1,6 +1,7 @@
 package com.example.HJSS;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Learner {
@@ -29,6 +30,9 @@ public class Learner {
         this.emergencyContact = emergencyContact;
         this.gradeLevel = GradeLevel.ZERO;
 
+        this.bookedLessons = new ArrayList<>();
+        this.cancelledLessons = new ArrayList<>();
+        this.attendedLessons = new ArrayList<>();
     }
 
     public int getId() {
@@ -64,17 +68,17 @@ public class Learner {
     }
 
 
-    public List<Lesson> getBookedLessons() {
+    protected List<Lesson> getBookedLessons() {
         return bookedLessons;
     }
 
 
-    public List<Lesson> getCancelledLessons() {
+    protected List<Lesson> getCancelledLessons() {
         return cancelledLessons;
     }
 
 
-    public List<Lesson> getAttendedLessons() {
+    protected List<Lesson> getAttendedLessons() {
         return attendedLessons;
     }
 

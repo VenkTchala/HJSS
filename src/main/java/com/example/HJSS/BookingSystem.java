@@ -12,6 +12,7 @@ public class BookingSystem {
     private List<Coach> coaches;
     private Timetable timetable;
     private Map<String , Coach> coachMap;
+    private Learner selectedLearner;
 
     public BookingSystem(){
         learners = new ArrayList<>();
@@ -27,7 +28,6 @@ public class BookingSystem {
         }
         createTimetable();
 
-//        Learner learner =
         String learnerNames[] = {"John", "Ibrahim", "Victor" , "Paul" , "Aurora", "Ava", "Leon" };
         String learnerGender[] = {"M", "M", "M" , "M" , "F", "F", "M" };
         int learnerAges[] = {9,10,11,8,7,6,5};
@@ -254,7 +254,7 @@ public class BookingSystem {
 
         IntStream.range(1, GradeLevel.values().length)
                 .forEach(i ->
-                    System.out.println( "Press " + i + " to select lessons at Grade " + GradeLevel.values()[i])
+                    System.out.println( "Press " + i + " to view lessons at Grade " + GradeLevel.values()[i])
                 );
 
         Scanner sc = new Scanner(in);
@@ -268,8 +268,9 @@ public class BookingSystem {
                 System.err.println("Invalid option : " + i);
                 return;
             }
-            printTable(timetable.getLessonsByGrade(GradeLevel.values()[i]));
-
+            List<Lesson> lessons = timetable.getLessonsByGrade(GradeLevel.values()[i]);
+            printTable(lessons,in);
+            selectLesson(lessons,in);
         }
         catch (Exception e){
             System.err.println("Invalid option : " + selection);
@@ -278,10 +279,20 @@ public class BookingSystem {
 
     private void printTableByCoach(InputStream in){
 
-        IntStream.range(0, coaches.size())
+        System.out.println("-".repeat(50));
+
+        System.out.format("%-15s%-15s%-15s%n", "Id", "Coach" , "rating");
+
+        System.out.println("-".repeat(50));
+
+        IntStream.range(0,coaches.size())
                 .forEach(i -> {
-                    System.out.println( "Press " + i + " to select lessons taught by " + coaches.get(i).getName());
+                    Coach coach = coaches.get(i);
+                        System.out.format("%-15s%-15s%-15s%n", i + 1 , coach.getName(),coach.getAverageRating());
                 });
+
+
+        System.out.println("-".repeat(50) + "\n");
 
         Scanner sc = new Scanner(in);
         String selection = sc.nextLine();
@@ -294,12 +305,16 @@ public class BookingSystem {
             System.err.println("Invalid option : " + i);
             return;
         }
-            printTable(timetable.getLessonsByCoach(coaches.get(i)));
-
+            List<Lesson> list = timetable.getLessonsByCoach(coaches.get(i - 1));
+            printTable(list,in);
+            selectLesson(list,in);
         }
         catch (Exception e){
             System.err.println("Invalid option : " + selection);
         }
+
+
+
     }
 
     private void printTableByDate(InputStream in){
@@ -319,8 +334,9 @@ public class BookingSystem {
                 System.err.println("Invalid option : " + i);
                 return;
             }
-            printTable(timetable.getLessonsByDay( DayOfWeek.valueOf(OperatingDays.values()[i].toString())));
-
+            List<Lesson> lessons = timetable.getLessonsByDay( DayOfWeek.valueOf(OperatingDays.values()[i].toString()));
+            printTable(lessons,in);
+            selectLesson(lessons,in);
         }
         catch (Exception e){
             System.err.println("Invalid option : " + str);
@@ -347,24 +363,144 @@ public class BookingSystem {
         }
     }
 
-    public void printTable(List<Lesson> list){
-        System.out.println("-".repeat(80));
+//    public Learner selectLearner(InputStream in){
+//
+//        Scanner sc = new Scanner(in);
+//        for(int i = 0 ; i < learners.size() ; i++ ){
+////            System.out.println("Press (" + i + ") to login as " + learner);
+//        }
+//
+//        String str = sc.nextLine();
+//
+//        int i;
+//
+//        try {
+//            i = Integer.parseInt(str);
+//
+//            if(i < 0 || i > OperatingDays.values().length) {
+//                System.err.println("Invalid option : " + i);
+//                return null;
+//            }
+//            printTable(timetable.getLessonsByDay( DayOfWeek.valueOf(OperatingDays.values()[i].toString())));
+//
+//        }
+//        catch (Exception e){
+//            System.err.println("Invalid option : " + str);
+//        }
+//
+//
+//        return null;
+//    }
 
-        System.out.format("%-15s%-15s%-15s%-15s%-15s%n", "Date" , "Day", "Coach" , "grade", "remainingSeats" );
+    public void printTable(List<Lesson> list , InputStream in){
 
-        System.out.println("-".repeat(80));
 
-        list
-                .forEach(i ->
-                        System.out.format("%-15s%-15s%-15s%-15d%-15d%n", i.getDate() ,i.getDate().getDayOfWeek().toString().toLowerCase() , i.getCoach().getName() , i.getGradeLevel().ordinal(), i.getVacancy() )
-                        );
+        System.out.println("-".repeat(90));
 
-        System.out.println("-".repeat(80) + "\n");
+        System.out.format("%-15s%-15s%-15s%-15s%-15s%-15s%n", "NO : " , "Date" , "Day", "Coach" , "grade", "remainingSeats" );
+
+        System.out.println("-".repeat(90));
+
+        IntStream.range(0 , list.size())
+                .forEach(i -> {
+                    Lesson lesson = list.get(i);
+                        System.out.format("%-15s%-15s%-15s%-15s%-15d%-15d%n",i + 1, lesson.getDate() ,lesson.getDate().getDayOfWeek().toString().toLowerCase() , lesson.getCoach().getName() , lesson.getGradeLevel().ordinal(), lesson.getVacancy());
+                });
+
+        System.out.println("-".repeat(90) + "\n");
     }
 
+    public void selectLesson(List<Lesson> list,InputStream in){
+
+        System.out.println("Select Lesson Id to book lesson  \t\t\t Press (B) to go back to menu.\n");
+
+        Scanner sc = new Scanner(in);
+
+        String selection = sc.nextLine();
+
+        int i ;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            Lesson lesson = list.get(i -1);
+
+            bookLesson(lesson);
+
+            System.out.println("\n Lesson booked sucessfully\n");
+
+            printTable(List.of(lesson),in);
+        }
+        catch (NumberFormatException e){
+            switch (selection){
+                case "B" -> printTableMenu(in);
+                default -> System.err.println("\nInvalid selection : " + selection +"\n");
+            }
+        }
+        catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+
+    }
+
+    public void selectUserTable(InputStream in){
+
+        System.out.println("-".repeat(60));
+
+        System.out.format("%-15s%-15s%-15s%-15s%n", "Id" , "Name" , "Age" , "gender");
+
+        System.out.println("-".repeat(60));
+
+        IntStream.range(0,learners.size())
+                        .forEach(i -> {
+                            Learner learner = learners.get(i);
+
+                            System.out.format("%-15s%-15s%-15s%-15s%n", learner.getId() , learner.getName(),learner.getAge() ,learner.getGender() );
+                        });
+
+        System.out.println("-".repeat(60));
+
+        System.out.println("\n Press learner Id to login.");
+
+        Scanner sc = new Scanner(in);
+
+        String selection = sc.nextLine();
+
+        int i;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            if(i < 1 || i > learners.size() ) {
+                throw new IllegalArgumentException();
+            }
+            selectedLearner = learners.get(i - 1);
+            System.out.println("\n Sucessfully logged in as " + selectedLearner.getName() + "\n");
+        }
+        catch (Exception e){
+            System.err.println("Invalid option : " + selection);
+        }
+    }
+
+    public String getLoggedInUserName(){
+        return selectedLearner.getName();
+    }
+
+    public int getLoggedInUserGrade(){
+        return selectedLearner.getGradeLevel().ordinal();
+    }
+
+    public void bookLesson(Lesson lesson){
+        lesson.bookLesson(selectedLearner);
+        selectedLearner.getBookedLessons().add(lesson);
+    }
 
     public int getLearnersCount(){
         return learners.size();
+    }
+
+    public boolean isLearnerSelected(){
+        return selectedLearner == null;
     }
 
 }
