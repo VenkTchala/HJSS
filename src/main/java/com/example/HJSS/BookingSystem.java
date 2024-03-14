@@ -8,10 +8,10 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class BookingSystem {
-    private List<Learner> learners;
-    private List<Coach> coaches;
+    private final List<Learner> learners;
+    private final List<Coach> coaches;
     private Timetable timetable;
-    private Map<String , Coach> coachMap;
+    private final Map<String , Coach> coachMap;
     private Learner selectedLearner;
 
     public BookingSystem(){
@@ -28,9 +28,9 @@ public class BookingSystem {
         }
         createTimetable();
 
-        String learnerNames[] = {"John", "Ibrahim", "Victor" , "Paul" , "Aurora", "Ava", "Leon" };
-        String learnerGender[] = {"M", "M", "M" , "M" , "F", "F", "M" };
-        int learnerAges[] = {9,10,11,8,7,6,5};
+        String[] learnerNames = {"John", "Ibrahim", "Victor" , "Paul" , "Aurora", "Ava", "Leon" };
+        String[] learnerGender = {"M", "M", "M" , "M" , "F", "F", "M" };
+        int[] learnerAges = {9,10,11,8,7,6,5};
         String[] phoneNumbers = {"44648484843", "44866264265" , "44848457654", "44754234141" , "44554414375" , "44334252225" , "44534267854"  };
 
         String[] emergencyNumbers = {"44768484843", "44156264265" , "44768457654", "44834234141" , "44124414375" , "44524252225" , "44144267854"  };
@@ -39,9 +39,9 @@ public class BookingSystem {
             Gender gender;
             int age = learnerAges[i];
             switch (learnerGender[i]){
-                case "M" -> gender = Gender.MALE;
-                case "F" -> gender = Gender.FEMALE;
-                case "O" -> gender = Gender.OTHER;
+                case "M" , "m" -> gender = Gender.MALE;
+                case "F" , "f" -> gender = Gender.FEMALE;
+                case "O" , "o" -> gender = Gender.OTHER;
                 default -> {
                     return;
                 }
@@ -52,7 +52,7 @@ public class BookingSystem {
 
     }
 
-    public boolean addLearner(InputStream in){
+    public void addLearner(InputStream in){
         try {
             Learner learner =
                     parseLearnerFromInput(in);
@@ -62,7 +62,6 @@ public class BookingSystem {
         catch (Exception e){
             System.err.println("\n" + e.getMessage() + ", please register again." + "\n");
         }
-        return true;
     }
 
     public Learner parseLearnerFromInput(InputStream in){
@@ -239,7 +238,7 @@ public class BookingSystem {
     public void printTableMenu(InputStream in){
         Scanner sc = new Scanner(in);
 
-        System.out.println( "Press (C) to View lessons taught by Coach\t" + "Press (G) to view lessons by GradeLevel\t\t" + "Press (D) to view Lessons by Day\t");
+        System.out.println( "\nPress (C) to View lessons taught by Coach\t" + "Press (G) to view lessons by GradeLevel\t\t" + "Press (D) to view Lessons by Day\t");
 
         String str = sc.nextLine();
 
@@ -279,6 +278,7 @@ public class BookingSystem {
 
     private void printTableByCoach(InputStream in){
 
+        System.out.println("\n");
         System.out.println("-".repeat(50));
 
         System.out.format("%-15s%-15s%-15s%n", "Id", "Coach" , "rating");
@@ -293,6 +293,8 @@ public class BookingSystem {
 
 
         System.out.println("-".repeat(50) + "\n");
+
+        System.out.println("Enter coach Id :\n");
 
         Scanner sc = new Scanner(in);
         String selection = sc.nextLine();
@@ -312,9 +314,6 @@ public class BookingSystem {
         catch (Exception e){
             System.err.println("Invalid option : " + selection);
         }
-
-
-
     }
 
     private void printTableByDate(InputStream in){
@@ -358,39 +357,10 @@ public class BookingSystem {
                                 Lesson lesson = new Lesson(i,timeSlot,coach,gradeLevel);
 
                                 timetable.addLesson(lesson);
-
                             });
         }
     }
 
-//    public Learner selectLearner(InputStream in){
-//
-//        Scanner sc = new Scanner(in);
-//        for(int i = 0 ; i < learners.size() ; i++ ){
-////            System.out.println("Press (" + i + ") to login as " + learner);
-//        }
-//
-//        String str = sc.nextLine();
-//
-//        int i;
-//
-//        try {
-//            i = Integer.parseInt(str);
-//
-//            if(i < 0 || i > OperatingDays.values().length) {
-//                System.err.println("Invalid option : " + i);
-//                return null;
-//            }
-//            printTable(timetable.getLessonsByDay( DayOfWeek.valueOf(OperatingDays.values()[i].toString())));
-//
-//        }
-//        catch (Exception e){
-//            System.err.println("Invalid option : " + str);
-//        }
-//
-//
-//        return null;
-//    }
 
     public void printTable(List<Lesson> list , InputStream in){
 
@@ -409,6 +379,129 @@ public class BookingSystem {
 
         System.out.println("-".repeat(90) + "\n");
     }
+
+    public void printBookedLessons(InputStream in){
+        List<Lesson> bookedLessons = selectedLearner.getBookedLessons();
+
+
+
+        if(!bookedLessons.isEmpty()){
+            printTable(bookedLessons,in);
+
+            System.out.println("\nPress (A) to attend Lesson\t\tPress (C) to cancel lesson  \t\t\t Press (B) to go back to menu.\n");
+
+            Scanner sc = new Scanner(in);
+
+            String selection = sc.nextLine();
+
+            switch (selection){
+                case "C", "c" -> cancelSelectedLesson(bookedLessons,in);
+                case "A" , "a" -> attendLessonMenu(bookedLessons,in);
+            }
+        }
+
+        else
+            System.err.println("\nNo lessons Booked till now\n");
+    }
+
+    public void printAttendedLesson(InputStream in){
+
+        List<Lesson> attendedLessons = selectedLearner.getAttendedLessons();
+
+        if(!attendedLessons.isEmpty()){
+            printTable(attendedLessons,in);
+
+            System.out.println("\nPress (R) to Review Lesson\t\t Press (B) to go back to menu.\n");
+
+            Scanner sc = new Scanner(in);
+
+            String selection = sc.nextLine();
+
+            switch (selection){
+                case "R" , "r" : reviewLessonMenu(attendedLessons,in);
+            }
+        }
+
+        else
+            System.err.println("\nYou have not attended any lesson till now\n");
+    }
+
+    public void reviewLessonMenu(List<Lesson> list,InputStream in){
+
+        System.out.println("\nSelect Lesson Id : ");
+
+        Scanner sc = new Scanner(in);
+
+        String selection = sc.nextLine();
+
+        int i ;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            Lesson lesson = list.get(i -1);
+
+            System.out.println("Give ur rating 1 to 5 (1: Very dissatisfied, 2: Dissatisfied, 3: Ok, 4: Satisfied, 5: Very Satisfied)");
+
+            i = Integer.parseInt(sc.nextLine());
+
+            if(i < 0 || i > 5)
+                throw new IllegalArgumentException();
+
+            reviewLesson(lesson,i);
+
+            System.out.println("\n Reviewed lesson sucessfully\n");
+
+            printTable(List.of(lesson),in);
+        }
+        catch (NumberFormatException e){
+            switch (selection){
+                case "B" , "b" -> printTableMenu(in);
+                default -> System.err.println("\nInvalid selection : " + selection +"\n");
+            }
+        }
+        catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+    public void reviewLesson(Lesson lesson,int rating){
+        lesson.reviewLesson(new Review(selectedLearner,rating));
+        Coach coach = lesson.getCoach();
+        coach.updateRating(rating);
+    }
+
+    public void cancelSelectedLesson(List<Lesson> list ,InputStream in){
+
+        System.out.println("\nSelect Lesson Id : ");
+
+        Scanner sc = new Scanner(in);
+
+        String selection = sc.nextLine();
+
+        int i ;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            Lesson lesson = list.get(i -1);
+
+            cancelBooking(lesson);
+
+            System.out.println("\n Lesson cancelled sucessfully\n");
+
+            printTable(List.of(lesson),in);
+        }
+        catch (NumberFormatException e){
+            switch (selection){
+                case "B" , "b" -> printTableMenu(in);
+                default -> System.err.println("\nInvalid selection : " + selection +"\n");
+            }
+        }
+        catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+
 
     public void selectLesson(List<Lesson> list,InputStream in){
 
@@ -433,7 +526,7 @@ public class BookingSystem {
         }
         catch (NumberFormatException e){
             switch (selection){
-                case "B" -> printTableMenu(in);
+                case "B" , "b" -> printTableMenu(in);
                 default -> System.err.println("\nInvalid selection : " + selection +"\n");
             }
         }
@@ -492,7 +585,91 @@ public class BookingSystem {
 
     public void bookLesson(Lesson lesson){
         lesson.bookLesson(selectedLearner);
-        selectedLearner.getBookedLessons().add(lesson);
+        if(!selectedLearner.getBookedLessons().contains(lesson)){
+            selectedLearner.getBookedLessons().add(lesson);
+        }
+
+    }
+
+    public void printUserReport(){
+
+        System.out.println("User Report : \n");
+
+        System.out.println("-".repeat(100));
+
+        System.out.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", "Id" , "Name" , "Age" , "gender" , "Booked","Attended" , "Cancelled");
+
+        System.out.println("-".repeat(100));
+        learners.stream()
+                        .forEach(i -> {
+                            System.out.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", i.getId() , i.getName() , i.getAge() , i.getGender() , i.getBookedLessons().size()  ,i.getAttendedLessons().size() , i.getCancelledLessons().size());
+                        });
+
+
+        System.out.println("-".repeat(100) + "\n");
+    }
+
+
+    public void printCoachReport(){
+
+        System.out.println("\nCoach Report : \n");
+
+        System.out.println("-".repeat(30));
+
+        System.out.format("%-15s%-15s%n" , "Name" , "Avg rating");
+
+        System.out.println("-".repeat(30));
+        coaches.stream()
+                .forEach(i -> {
+                    System.out.format("%-15s%-15s%n", i.getName() , i.getAverageRating());
+                });
+
+        System.out.println("-".repeat(30) + "\n");
+    }
+
+    public void attendLessonMenu(List<Lesson> list,InputStream in){
+
+        System.out.println("\nSelect Lesson Id : ");
+
+        Scanner sc = new Scanner(in);
+
+        String selection = sc.nextLine();
+
+        int i ;
+
+        try {
+            i = Integer.parseInt(selection);
+
+            Lesson lesson = list.get(i -1);
+
+            attendLesson(lesson);
+
+            printTable(List.of(lesson),in);
+        }
+        catch (NumberFormatException e){
+            System.err.println("\nInvalid selection : " + selection +"\n");
+        }
+        catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void attendLesson(Lesson lesson){
+        if(lesson.getDate().isEqual(LocalDate.now())){
+            selectedLearner.getAttendedLessons().add(lesson);
+            selectedLearner.levelUpGrade();
+            System.out.println("Attended Lesson Sucessfully !!");
+        }
+        else{
+            System.err.println("\nAttendance marking is not yet available for this lesson.\n");
+        }
+    }
+
+    public void cancelBooking(Lesson lesson){
+        lesson.cancelBooking(selectedLearner);
+        selectedLearner.getCancelledLessons().add(lesson);
+        selectedLearner.getBookedLessons().removeIf(i -> i.getId() == lesson.getId());
+        System.out.println("\n Cancelled booking sucessfully");
     }
 
     public int getLearnersCount(){
@@ -502,5 +679,4 @@ public class BookingSystem {
     public boolean isLearnerSelected(){
         return selectedLearner == null;
     }
-
 }

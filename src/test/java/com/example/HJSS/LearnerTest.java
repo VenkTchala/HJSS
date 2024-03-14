@@ -23,7 +23,7 @@ class LearnerTest {
      void shouldThrowIllegalArgumentExceptionForDisApprovedAge(){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Learner("John doe",Gender.MALE,16,"44523852694","44546567294"));
 
-        assertEquals("A learner’s age needs to be between 4 and 11",exception.getLocalizedMessage());
+        assertEquals("\nA learner’s age needs to be between 4 and 11\n",exception.getLocalizedMessage());
     }
 
     @Test

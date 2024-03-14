@@ -25,10 +25,6 @@ public class Timetable {
         return gradeLevelListMap.get(level);
     }
 
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
     public void addLesson(Lesson lesson){
         coachLessonMap.putIfAbsent(lesson.getCoach(),new ArrayList<>());
         coachLessonMap.get(lesson.getCoach()).add(lesson);

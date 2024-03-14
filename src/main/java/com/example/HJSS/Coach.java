@@ -1,17 +1,18 @@
 package com.example.HJSS;
 
-import java.util.List;
-
 public class Coach {
-    private String name;
-    private Gender gender;
-    private List<Lesson> lessonsTaught;
+    private final String name;
+    private final Gender gender;
     private double averageRating;
+    private int numRatings;
+    private double ratingSum;
 
     public Coach(String name, Gender gender) {
         this.name = name;
         this.gender = gender;
         this.averageRating = 0;
+        this.numRatings = 0;
+        this.ratingSum = 0;
     }
 
     public String getName() {
@@ -26,12 +27,9 @@ public class Coach {
         return averageRating;
     }
 
-    public List<Lesson> getLessonsTaught() {
-        return lessonsTaught;
-    }
-
     protected void updateRating(double rating){
-        this.averageRating = rating;
+        this.numRatings++;
+        this.ratingSum += rating;
+        this.averageRating = ratingSum / numRatings;
     }
-
 }

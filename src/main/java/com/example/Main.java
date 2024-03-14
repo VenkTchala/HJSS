@@ -28,7 +28,6 @@ public class Main {
             }
         }
 
-
 //
         loop: while(true) {
 
@@ -36,18 +35,21 @@ public class Main {
 
             System.out.println("Logged in as : " + bookingSystem.getLoggedInUserName() + " Grade - " + bookingSystem.getLoggedInUserGrade() +"\n");
 
-            System.out.println("Press (V) to view timetable & Book lessons\t\t" + "Press (E) to exit program\n");
+            System.out.println("Press (V) to view timetable & Book lessons\t\t" + "Press (B) to view Booked Lessons\t\tPress (A) to view Attended lessons\n\n" +"Press (U) to Print learner report\t\t\t\t" + "Press (C) to print Coach report\t\t\t\t" +  "Press (E) to exit program\n");
 
             Scanner scanner = new Scanner(System.in);
 
             switch (scanner.nextLine()) {
                 case "V" , "v" ->
                     bookingSystem.printTableMenu(System.in);
+                case "B" , "b" -> bookingSystem.printBookedLessons(System.in);
+                case "A","a" -> bookingSystem.printAttendedLesson(System.in);
                 case "E", "e" ->{ break loop;}
+                case "U" , "u" -> bookingSystem.printUserReport();
+                case "C", "c" -> bookingSystem.printCoachReport();
             }
 
         }
-
 
     }
 }

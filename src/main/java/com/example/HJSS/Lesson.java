@@ -12,11 +12,12 @@ public class Lesson {
     public int getId() {
         return id;
     }
-
     private final TimeSlot timeSlot;
     private final Coach coach;
     private final GradeLevel gradeLevel;
     private final List<Learner> bookedLearners;
+    private final List<Review> reviews;
+    private final List<Learner> attendedLearners;
     private boolean hasVacancy;
 
     public Lesson(LocalDate date,TimeSlot timeSlot,Coach coach,GradeLevel gradeLevel){
@@ -31,6 +32,8 @@ public class Lesson {
         this.coach = coach;
         this.gradeLevel = gradeLevel;
         this.bookedLearners = new ArrayList<>();
+        this.reviews = new ArrayList<>();
+        this.attendedLearners = new ArrayList<>();
         this.hasVacancy = true;
     }
 
@@ -56,20 +59,33 @@ public class Lesson {
         return 4 - bookedLearners.size();
     }
 
-    public boolean bookLesson(Learner learner){
+    public void bookLesson(Learner learner){
         if(!hasVacancy) throw new IllegalArgumentException("This lesson is Already booked");
         GradeLevel learnerGrade = learner.getGradeLevel();
         int learnerGradeInt = learnerGrade.ordinal();
         int lessonGradeInt = gradeLevel.ordinal();
 
+        if(bookedLearners.contains(learner))
+            throw new IllegalArgumentException("\nYou have already booked this lesson\n");
+
         if( learnerGradeInt + 1 != lessonGradeInt && learnerGradeInt != lessonGradeInt )
-            throw new IllegalArgumentException("Grade " + learnerGrade + " learners cannot attend grade " + this.gradeLevel + " lesson" );
+            throw new IllegalArgumentException("\nGrade " + learnerGrade + " learners cannot attend grade " + this.gradeLevel + " lesson\n" );
         this.bookedLearners.add(learner);
 
         if(this.bookedLearners.size() == 4)
             this.hasVacancy = false;
 
-        return true;
+    }
+
+    public void cancelBooking(Learner learner){
+        if(this.bookedLearners.contains(learner))
+            this.bookedLearners
+                    .removeIf(i -> i.getId() == learner.getId());
+    }
+
+    public void reviewLesson(Review review){
+        if(this.attendedLearners.contains(review.getLearner()))
+            this.reviews.add(review);
     }
 
     @Override

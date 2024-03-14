@@ -19,7 +19,7 @@ public class Learner {
 
     public Learner(String name,Gender gender,int age ,String phoneNumber,String emergencyContact){
         if(age < 4 || age > 11)
-            throw new IllegalArgumentException("A learner’s age needs to be between 4 and 11");
+            throw new IllegalArgumentException("\nA learner’s age needs to be between 4 and 11\n");
 
         this.id = Learner.index;
         Learner.index++;
@@ -77,6 +77,10 @@ public class Learner {
         return cancelledLessons;
     }
 
+    protected void levelUpGrade(){
+        if(!gradeLevel.equals(GradeLevel.FIVE))
+            this.gradeLevel = GradeLevel.values()[this.gradeLevel.ordinal() + 1];
+    }
 
     protected List<Lesson> getAttendedLessons() {
         return attendedLessons;
